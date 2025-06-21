@@ -13,16 +13,20 @@ from typing import List, Dict, Optional,Annotated
 
 # Annotated typing module er part jeta meta data add korar jonno use kora hoi
 
+# Field  ashole 3 ta kaj kore (1. custom data validation , 2. metadata, 3. default value)
+
+# strict = True mane hosse jodi kono integer value string kori tahole sheta error dekhabe sheta oboshoi integer ei hote hobe
+
 class Patient(BaseModel):
-    name: str = Field(..., min_length=1, max_length=50)  # ... means required field
+    name: Annotated[str, Field(min_length=1, max_length=50, title="Patient Name", description="Give the name of the patient in less than 50 characters",examples=["hadi","nitish"])]
     email: EmailStr
     linkedin_url: AnyUrl
     age: int= Field(gt=0,lt=120)  # gt means greater than 0
     height: float 
-    weight: float= Field(gt=0)  # gt means greater than 0
+    weight: Annotated[float, Field(gt=0, strict=True)]
     bmi: float
-    married: Optional[bool]= None
-    allergies: Optional[List[str]]= None
+    married: Annotated[bool, Field(default=None,description="Is the patient married or not?")]
+    allergies: Annotated[Optional[List[str]], Field(default= None, max_length=5)]
     contact_details: dict[str, str]
 
 def insert_patient_data(patient: Patient):
